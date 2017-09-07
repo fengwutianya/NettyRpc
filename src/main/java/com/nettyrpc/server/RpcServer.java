@@ -39,7 +39,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
 
     private Map<String, Object> handlerMap = new HashMap<>();
 
-    private static ThreadPoolExecutor threadPoolExecutor;
+    private static volatile ThreadPoolExecutor threadPoolExecutor;
 
     public RpcServer(String serverAddress) {
         this.serverAddress = serverAddress;
@@ -100,6 +100,7 @@ public class RpcServer implements ApplicationContextAware, InitializingBean {
     }
 
     public static void submit(Runnable task){
+        //definitely wrong here threadPoolExecutor should be volatile
         if(threadPoolExecutor == null){
             synchronized (RpcServer.class) {
                 if(threadPoolExecutor == null){
